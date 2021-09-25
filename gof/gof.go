@@ -4,6 +4,7 @@ import (
 	"GoGif/common"
 	"GoGif/gof/img_op"
 	"fmt"
+	"image"
 	"os"
 	"path"
 	"path/filepath"
@@ -20,21 +21,67 @@ var (
 	imagesInputRoot string // 要生成gif动图的输入文件夹
 	gifOutRoot, _   = os.UserHomeDir()
 	imgNameFiles    []string
+	interval        float32
 	// MatchImageFormat 匹配以常见图像文件格式为后缀的正则表达模式
 	MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg)$", separator, separator, separator, separator, separator)
 )
+
+var preinstallSize img_op.Size
 
 func init() {
 	if runtime.GOOS == "windows" {
 		gifOutRoot = path.Join(gifOutRoot, "desktop")
 	}
 }
-func Run() {
-	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
-	_, e := fmt.Scanf("%s", &imagesInputRoot)
+
+func readFormStd() bool {
+	fmt.Println("请输入生成Gif动画的宽(应该大于等于你最大图片素材的宽)：")
+	_, e := fmt.Scanf("%d", &preinstallSize.X)
 	if e != nil {
-		fmt.Println(e.Error())
-		return
+		println(e.Error())
+		preinstallSize.X = 500
+	}
+	fmt.Println("请输入生成最终Gif动图的高(应该大于等于你最大图片素材的高)：")
+	_, e = fmt.Scanf("%d", &preinstallSize.Y)
+	if e != nil {
+		println(e.Error())
+		preinstallSize.Y = 500
+	}
+	fmt.Println("请输入图片间的停留时长(秒)：")
+	_, e = fmt.Scanf("%f", &interval)
+	if e != nil {
+		println(e.Error())
+		return false
+	}
+	if interval > 10.0 {
+		println("间隔超过10s,太久了,这是制作gif动图啊，你停留在一帧那么久有啥用？短点吧！")
+		return false
+	}
+	if interval < 0.1 {
+		println("间隔小于0.1s,太快了,这是制作gif动图啊，你一帧闪那么快，别人都看不清楚有啥用！")
+		return false
+	}
+	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
+	_, e = fmt.Scanf("%s", &imagesInputRoot)
+	if e != nil {
+		println(e.Error())
+		return false
+	}
+	return true
+}
+
+func Run(wFromGui, hFromGui int, durFromGui float32, inputRootFromGui string) {
+	// 若参数没有数据则从标准控制台输入素材地址 要生成的尺寸 每帧间隔
+	if inputRootFromGui == "" && wFromGui <= 0 && hFromGui <= 0 && durFromGui <= 0 {
+		success := readFormStd()
+		if !success {
+			return
+		}
+	} else {
+		// 参数有数据 表示从特点平台(windows)gui控件传入
+		preinstallSize = img_op.Size{X: wFromGui, Y: hFromGui}
+		imagesInputRoot = inputRootFromGui
+		interval = durFromGui
 	}
 	fmt.Println(imagesInputRoot)
 	fi, e := os.Stat(imagesInputRoot)
@@ -63,6 +110,11 @@ func Run() {
 		inputImageAbsLists = append(inputImageAbsLists, abs)
 	}
 
+	// 检查输入文件夹下每张图片素材的尺寸是否超出预设尺寸
+	success := checkDimensions(inputImageAbsLists)
+	if !success {
+		return
+	}
 	// 输入文件夹拼接临时转换文件夹成为新路径 并生成这个新路径(临时转换文件夹)
 	imagesInputRoot, _ = filepath.Abs(path.Join(imagesInputRoot, tmpConvertFolder))
 
@@ -82,8 +134,39 @@ func Run() {
 	common.SortStringSlice(imgNameFiles, false)
 
 	// 使用此方法将imagesInputRoot临时文件夹路径下的素材图片(已经全为gif格式)生成为gifOutRoot路径下的gif动图
-	img_op.OpGifFileToGifDone(imagesInputRoot, imgNameFiles, gifOutRoot)
+	img_op.OpGifFileToGifDone(imagesInputRoot, imgNameFiles, gifOutRoot, preinstallSize, interval)
 
 	// 生成完毕，删除临时文件夹
 	common.RemoveFolder(imagesInputRoot)
+}
+
+// 检查图片文件路径列表中每一张的尺寸是否超出预设尺寸
+func checkDimensions(imageAbsLists []string) bool {
+	for i := 0; i < len(imageAbsLists); i++ {
+		f, err := os.Open(imageAbsLists[i])
+		if err != nil {
+			println("error open in checkDimensions:", err.Error())
+			return false
+		}
+		ic, _, err := image.DecodeConfig(f)
+		if ic.Width == 0 || ic.Height == 0 {
+			println("素材图片", imageAbsLists[i], "尺寸为0，无效或已损坏的图片。")
+			return false
+		}
+		if ic.Width > preinstallSize.X {
+			println("素材图片", imageAbsLists[i], "宽度大于你想要的宽，请缩小图片尺寸。"+
+				"提示：要想生成良好效果的动图，所有图片素材应小于等于输入的尺寸且它们的尺寸应该一致。")
+			return false
+		}
+		if ic.Height > preinstallSize.Y {
+			println("素材图片", imageAbsLists[i], "高度大于你想要的高，请缩小图片尺寸。"+
+				"提示：要想生成良好效果的动图，所有图片素材应小于等于输入的尺寸且它们的尺寸应该一致。")
+			return false
+		}
+		err = f.Close()
+		if err != nil {
+			return false
+		}
+	}
+	return true
 }
