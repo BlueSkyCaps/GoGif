@@ -22,6 +22,7 @@ var (
 	gifOutRoot, _   = os.UserHomeDir()
 	imgNameFiles    []string
 	interval        float32
+	order           int
 	// MatchImageFormat 匹配以常见图像文件格式为后缀的正则表达模式
 	MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg)$", separator, separator, separator, separator, separator)
 )
@@ -35,16 +36,16 @@ func init() {
 }
 
 func readFormStd() bool {
-	fmt.Println("请输入生成Gif动画的宽(应该大于等于你最大图片素材的宽)：")
+	fmt.Println("请输入生成Gif动画的宽(应该大于等于你最大图片素材的宽且应该是整数)：")
 	_, e := fmt.Scanf("%d", &preinstallSize.X)
 	if e != nil {
-		println(e.Error())
+		println("无效整数位,宽度已设为500", e.Error())
 		preinstallSize.X = 500
 	}
-	fmt.Println("请输入生成最终Gif动图的高(应该大于等于你最大图片素材的高)：")
+	fmt.Println("请输入生成最终Gif动图的高(应该大于等于你最大图片素材的高且应该是整数)：")
 	_, e = fmt.Scanf("%d", &preinstallSize.Y)
 	if e != nil {
-		println(e.Error())
+		println("无效整数位,高度已设为500", e.Error())
 		preinstallSize.Y = 500
 	}
 	fmt.Println("请输入图片间的停留时长(秒)：")
@@ -61,6 +62,12 @@ func readFormStd() bool {
 		println("间隔小于0.1s,太快了,这是制作gif动图啊，你一帧闪那么快，别人都看不清楚有啥用！")
 		return false
 	}
+	fmt.Println("是否倒序？(输入0忽略，输入1倒序生成)")
+	_, e = fmt.Scanf("%d", &order)
+	if e != nil {
+		println(e.Error())
+		return false
+	}
 	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
 	_, e = fmt.Scanf("%s", &imagesInputRoot)
 	if e != nil {
@@ -70,7 +77,7 @@ func readFormStd() bool {
 	return true
 }
 
-func Run(wFromGui, hFromGui int, durFromGui float32, inputRootFromGui string) {
+func Run(wFromGui, hFromGui int, durFromGui float32, orderFromGui int, inputRootFromGui string) {
 	// 若参数没有数据则从标准控制台输入素材地址 要生成的尺寸 每帧间隔
 	if inputRootFromGui == "" && wFromGui <= 0 && hFromGui <= 0 && durFromGui <= 0 {
 		success := readFormStd()
@@ -82,6 +89,7 @@ func Run(wFromGui, hFromGui int, durFromGui float32, inputRootFromGui string) {
 		preinstallSize = img_op.Size{X: wFromGui, Y: hFromGui}
 		imagesInputRoot = inputRootFromGui
 		interval = durFromGui
+		order = orderFromGui
 	}
 	fmt.Println(imagesInputRoot)
 	fi, e := os.Stat(imagesInputRoot)
@@ -123,7 +131,7 @@ func Run(wFromGui, hFromGui int, durFromGui float32, inputRootFromGui string) {
 	// 开始将要组合的连续图片先统一编码为gif格式，并且存放在临时转换文件夹中
 	img_op.ConvertToGif(inputImageAbsLists, imagesInputRoot)
 
-	// 把原先存储的输入图片素材文件名统一改为.gif后缀,因为有可能素材不是gif格式后缀,统一编码后文件名已经统一为{1|2..}.gif
+	// 把原先存储的输入图片素材文件名统一改为.gif后缀,因为有可能素材不是gif格式后缀,统一编码后文件名已经统一为类似{1|2..}.gif
 	for i := 0; i < len(imgNameFiles); i++ {
 		formatEnd := strings.LastIndex(imgNameFiles[i], ".") + 1
 		formatStr := imgNameFiles[i][formatEnd:]
@@ -131,11 +139,12 @@ func Run(wFromGui, hFromGui int, durFromGui float32, inputRootFromGui string) {
 	}
 
 	// 将imgNameFiles的素材文件名列表重新按升序排列(若设置了倒序，则倒序)
-	common.SortStringSlice(imgNameFiles, false)
+	common.SortStringSlice(imgNameFiles, order == 1)
 
+	fmt.Println("开始生成..")
 	// 使用此方法将imagesInputRoot临时文件夹路径下的素材图片(已经全为gif格式)生成为gifOutRoot路径下的gif动图
 	img_op.OpGifFileToGifDone(imagesInputRoot, imgNameFiles, gifOutRoot, preinstallSize, interval)
-
+	fmt.Println("制作成功，请在你的用户目录(或Windows桌面)查看。")
 	// 生成完毕，删除临时文件夹
 	common.RemoveFolder(imagesInputRoot)
 }
