@@ -3,6 +3,7 @@ package gof
 import (
 	"GoGif/common"
 	"GoGif/gof/img_op"
+	"bufio"
 	"fmt"
 	"image"
 	"os"
@@ -35,8 +36,9 @@ func init() {
 	}
 }
 
+// 从标准控制流读取必须参数,Scanf需以\n字符接收最后的回车。路径采取bufio读取完整字符串,避免带有空格目录被截断
 func readFormStd() bool {
-	//var line rune
+
 	fmt.Println("请输入生成Gif动画的宽(应该大于等于你最大图片素材的宽且应该是整数)：")
 	_, e := fmt.Scanf("%d\n", &preinstallSize.X)
 	if e != nil {
@@ -70,7 +72,11 @@ func readFormStd() bool {
 		return false
 	}
 	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
-	_, e = fmt.Scanf("%s\n", &imagesInputRoot)
+	in := bufio.NewReader(os.Stdin)
+	imagesInputRoot, e = in.ReadString('\n')
+	// ReadString读\n结束并接收\n，此处去除最后的\n,windows是\r\n
+	imagesInputRoot = strings.TrimSuffix(imagesInputRoot, "\n")
+	imagesInputRoot = strings.TrimSuffix(imagesInputRoot, "\r")
 	if e != nil {
 		println(e.Error())
 		return false
@@ -92,9 +98,11 @@ func Run(wFromGui, hFromGui int, durFromGui float32, orderFromGui int, inputRoot
 		interval = durFromGui
 		order = orderFromGui
 	}
-	fmt.Println(imagesInputRoot)
 	fi, e := os.Stat(imagesInputRoot)
 	if e != nil || !fi.IsDir() {
+		if e != nil {
+			println(e.Error())
+		}
 		println("不存在输入的这个文件夹哦(⊙o⊙)？检查：你输入的路径是文件夹吗，文件夹存在吗？")
 		return
 	}
