@@ -25,7 +25,8 @@ var (
 	interval        float32
 	order           int
 	// MatchImageFormat 匹配以常见图像文件格式为后缀的正则表达模式
-	MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg)$", separator, separator, separator, separator, separator)
+	MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg|%v.PNG|%v.GIF|%v.JPG|%v.JPEG)$",
+		separator, separator, separator, separator, separator, separator, separator, separator, separator)
 )
 
 var preinstallSize img_op.Size
