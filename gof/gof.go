@@ -36,23 +36,24 @@ func init() {
 }
 
 func readFormStd() bool {
+	//var line rune
 	fmt.Println("请输入生成Gif动画的宽(应该大于等于你最大图片素材的宽且应该是整数)：")
-	_, e := fmt.Scanf("%d", &preinstallSize.X)
+	_, e := fmt.Scanf("%d\n", &preinstallSize.X)
 	if e != nil {
 		println("无效整数位,宽度已设为500", e.Error())
 		preinstallSize.X = 500
 	}
 	fmt.Println("请输入生成最终Gif动图的高(应该大于等于你最大图片素材的高且应该是整数)：")
-	_, e = fmt.Scanf("%d", &preinstallSize.Y)
+	_, e = fmt.Scanf("%d\n", &preinstallSize.Y)
 	if e != nil {
 		println("无效整数位,高度已设为500", e.Error())
 		preinstallSize.Y = 500
 	}
 	fmt.Println("请输入图片间的停留时长(秒)：")
-	_, e = fmt.Scanf("%f", &interval)
+	_, e = fmt.Scanf("%f\n", &interval)
 	if e != nil {
-		println(e.Error())
-		return false
+		println("无效间隔,停留已设为1", e.Error())
+		interval = 1
 	}
 	if interval > 10.0 {
 		println("间隔超过10s,太久了,这是制作gif动图啊，你停留在一帧那么久有啥用？短点吧！")
@@ -63,13 +64,13 @@ func readFormStd() bool {
 		return false
 	}
 	fmt.Println("是否倒序？(输入0忽略，输入1倒序生成)")
-	_, e = fmt.Scanf("%d", &order)
+	_, e = fmt.Scanf("%d\n", &order)
 	if e != nil {
 		println(e.Error())
 		return false
 	}
 	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
-	_, e = fmt.Scanf("%s", &imagesInputRoot)
+	_, e = fmt.Scanf("%s\n", &imagesInputRoot)
 	if e != nil {
 		println(e.Error())
 		return false

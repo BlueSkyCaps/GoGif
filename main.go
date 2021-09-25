@@ -7,7 +7,15 @@ import (
 	"strconv"
 )
 
+const Author = "*** 此程序作者：BlueSkyCaps(芝士为了玩|比尔小贤)"
+const Right = "*** 此程序由作者本人制作且免费向外开源，\n*** 若你是从第三方购买而获取此程序，则代表你可能受骗。"
+
 func main() {
+	fmt.Println("***")
+	fmt.Println(Author)
+	fmt.Println(Right)
+	fmt.Println("***")
+	fmt.Println()
 
 	args := os.Args
 	var w, h, dur, order int64 = 0, 0, 0, 0
