@@ -18,20 +18,22 @@ func main() {
 	fmt.Println()
 
 	args := os.Args
-	var w, h, dur, order int64 = 0, 0, 0, 0
+	var w, h, order int64 = 0, 0, 0
+	var dur float32
 	var inputRoot = ""
 	if len(args) > 1 {
 		// args[0]外部命令行调用时的此进程文件名
 		w, _ = strconv.ParseInt(args[1], 10, 32)
 		h, _ = strconv.ParseInt(args[2], 10, 32)
-		dur, _ = strconv.ParseInt(args[3], 10, 32)
+		var durTmp, _ = strconv.ParseFloat(args[3], 32)
+		dur = float32(durTmp)
 		order, _ = strconv.ParseInt(args[4], 10, 32)
 		inputRoot = args[5]
 	}
 	for i := 0; i < len(args); i++ {
 		fmt.Println("->->", args[i])
 	}
-	gof.Run(int(w), int(h), float32(dur), int(order), inputRoot)
+	gof.Run(int(w), int(h), dur, int(order), inputRoot)
 	var ce rune
 	_, _ = fmt.Scanf("%c", &ce)
 	return

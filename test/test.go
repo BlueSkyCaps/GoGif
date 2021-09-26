@@ -12,12 +12,12 @@ import (
 )
 
 var (
-	imagesRoot  = "C:/Users/pc/Desktop/gifs/gif"
+	imagesRoot  = "C:/Users/pc/Desktop/gifs/"
 	gifOutRoot  = "C:/Users/pc/Desktop/"
 	imgNmeFiles []string
 )
 
-func test() {
+func Test() {
 
 	dirInfo, _ := os.ReadDir(imagesRoot)
 	for i := 0; i < len(dirInfo); i++ {
