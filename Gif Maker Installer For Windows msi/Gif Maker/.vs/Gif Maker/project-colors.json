@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "dbd6f4b0-01fb-4542-9a53-eca3d7e06ae5": {
+      "ProjectGuid": "dbd6f4b0-01fb-4542-9a53-eca3d7e06ae5",
+      "DisplayName": "Gif Maker",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "杂项文件",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 1
+}

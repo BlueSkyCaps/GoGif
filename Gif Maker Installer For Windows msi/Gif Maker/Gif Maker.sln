@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gif Maker", "Gif Maker\Gif Maker.csproj", "{DBD6F4B0-01FB-4542-9A53-ECA3D7E06AE5}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GifMaker Installer", "GifMaker Installer\GifMaker Installer.vdproj", "{D4A14756-8942-462E-AE8A-53F531B44207}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBD6F4B0-01FB-4542-9A53-ECA3D7E06AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBD6F4B0-01FB-4542-9A53-ECA3D7E06AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBD6F4B0-01FB-4542-9A53-ECA3D7E06AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBD6F4B0-01FB-4542-9A53-ECA3D7E06AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4A14756-8942-462E-AE8A-53F531B44207}.Debug|Any CPU.ActiveCfg = Debug
+		{D4A14756-8942-462E-AE8A-53F531B44207}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53B5BCC6-1FC1-4F57-B48E-265A8D3A4E60}
+	EndGlobalSection
+EndGlobal
