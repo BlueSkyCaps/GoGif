@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoGif/gof"
+	"GoGIf/gof"
 	"fmt"
 	"os"
 	"strconv"

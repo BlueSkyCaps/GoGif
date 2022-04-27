@@ -1,7 +1,7 @@
 package img_op
 
 import (
-	"GoGif/common"
+	"GoGIf/common"
 	"fmt"
 	"image"
 	"image/gif"

@@ -1,8 +1,8 @@
 package gof
 
 import (
-	"GoGif/common"
-	"GoGif/gof/img_op"
+	"GoGIf/common"
+	"GoGIf/gof/img_op"
 	"bufio"
 	"fmt"
 	"image"
@@ -25,8 +25,9 @@ var (
 	interval        float32
 	order           int
 	// MatchImageFormat 匹配以常见图像文件格式为后缀的正则表达模式
-	MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg|%v.PNG|%v.GIF|%v.JPG|%v.JPEG)$",
-		separator, separator, separator, separator, separator, separator, separator, separator, separator)
+	/*MatchImageFormat = fmt.Sprintf("%v.*(%v.png|%v.gif|%v.jpg|%v.jpeg|%v.PNG|%v.GIF|%v.JPG|%v.JPEG)$",
+	separator, separator, separator, separator, separator, separator, separator, separator, separator)*/
+	MatchImageFormat = fmt.Sprintf("\\w+\\.(png|gif|jpg|jpeg|PNG|GIF|JPG|JPEG)$")
 )
 
 var preinstallSize img_op.Size

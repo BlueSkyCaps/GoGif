@@ -13,7 +13,7 @@ import (
 func MatchRegexString(p, v string) bool {
 	var e error
 	var m bool
-	if m, e = regexp.MatchString(p, v); m && e == nil {
+	if m, e = regexp.MatchString(p, v); m && (e == nil) {
 		return true
 	}
 	if e != nil {
