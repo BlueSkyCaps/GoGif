@@ -73,7 +73,7 @@ func readFormStd() bool {
 		println(e.Error())
 		return false
 	}
-	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可)")
+	fmt.Println("请输入你想要用于制作动图Gif的图片所在的文件夹路径。(直接粘贴路径并回车即可,文件名默认按序号[数字大小、字母顺序]排序整理)")
 	in := bufio.NewReader(os.Stdin)
 	imagesInputRoot, e = in.ReadString('\n')
 	// ReadString读\n结束并接收\n，此处去除最后的\n,windows是\r\n

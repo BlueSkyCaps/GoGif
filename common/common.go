@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 	"regexp"
 	"runtime/debug"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 func MatchRegexString(p, v string) bool {
@@ -64,15 +67,26 @@ func CreateFolder(createPath string) {
 }
 
 func SortStringSlice(sr []string, desc bool) {
-	if desc {
-		sort.Slice(sr, func(i, j int) bool {
-			return sr[i] > sr[j]
-		})
-		return
-	}
 	sort.Slice(sr, func(i, j int) bool {
-		return sr[i] < sr[j]
+		formatEndI := strings.LastIndex(sr[i], ".")
+		formatEndJ := strings.LastIndex(sr[j], ".")
+		fileNameI := sr[i][0:formatEndI]
+		fileNameJ := sr[j][0:formatEndJ]
+		ci, errI := strconv.ParseInt(fileNameI, 10, 32)
+		cj, errJ := strconv.ParseInt(fileNameJ, 10, 32)
+		if errI == nil && errJ == nil {
+			if ci == 10 || cj == 10 {
+				return ci < cj
+			}
+			return ci < cj
+		} else {
+			return sr[i] < sr[j]
+		}
 	})
+	// 降序，逆转序列
+	if desc {
+		Reverse(sr)
+	}
 }
 
 // RemoveFolder 删除一个文件夹
@@ -89,5 +103,13 @@ func RemoveFolder(Path string) {
 		}
 		// 再删除此文件夹本身
 		_ = os.Remove(Path)
+	}
+}
+
+func Reverse(s interface{}) {
+	n := reflect.ValueOf(s).Len()
+	swap := reflect.Swapper(s)
+	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
+		swap(i, j)
 	}
 }
