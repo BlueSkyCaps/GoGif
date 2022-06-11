@@ -1,10 +1,10 @@
 package gof
 
 import (
-	"GoGIf/common"
-	"GoGIf/gof/img_op"
 	"bufio"
 	"fmt"
+	"github.com/BlueSkyCaps/GoGif/common"
+	"github.com/BlueSkyCaps/GoGif/gof/img_op"
 	"image"
 	"os"
 	"path"

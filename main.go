@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GoGIf/gof"
 	"fmt"
+	"github.com/BlueSkyCaps/GoGif/gof"
 	"os"
 	"strconv"
 )

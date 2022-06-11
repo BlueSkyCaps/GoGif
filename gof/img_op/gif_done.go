@@ -1,8 +1,8 @@
 package img_op
 
 import (
-	"GoGIf/common"
 	"fmt"
+	"github.com/BlueSkyCaps/GoGif/common"
 	"image"
 	"image/gif"
 	"os"
