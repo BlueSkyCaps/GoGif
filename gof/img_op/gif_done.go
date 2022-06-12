@@ -40,8 +40,8 @@ func OpGifFileToGifDone(imagesInputRoot string, imgNameFiles []string, gifOutRoo
 	}
 	inputGifBoss.Config = image.Config{ColorModel: inputGifBoss.Config.ColorModel, Width: size.X, Height: size.Y}
 	inputGifBoss.LoopCount = 0
-	finalName := path.Join(gifOutRoot, common.UuidGenerator()+"out.gif")
-	finalGif, _ := os.OpenFile(finalName, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.ModePerm)
+	finalName := common.UuidGenerator() + "out.gif"
+	finalGif, _ := os.OpenFile(path.Join(gifOutRoot, finalName), os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.ModePerm)
 
 	err := gif.EncodeAll(finalGif, inputGifBoss)
 	if err != nil {
