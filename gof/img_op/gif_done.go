@@ -19,7 +19,7 @@ type Size struct {
 
 // OpGifFileToGifDone 将带有素材图片的文件夹路径以及此目录下所有gif图片的文件名输出最终gifOutRoot文件路径的gif动图
 // imgNameFiles必须在传递之前确保不为空且图片格式皆为gif，imagesInputRoot必须是imgNameFiles元素的有效上级路径
-func OpGifFileToGifDone(imagesInputRoot string, imgNameFiles []string, gifOutRoot string, size Size, interval float32) {
+func OpGifFileToGifDone(imagesInputRoot string, imgNameFiles []string, gifOutRoot string, size Size, interval float32) string {
 	inputGifBoss := &gif.GIF{}
 	for _, currentGifName := range imgNameFiles {
 		g, _ := os.Open(path.Join(imagesInputRoot, currentGifName))
@@ -40,7 +40,8 @@ func OpGifFileToGifDone(imagesInputRoot string, imgNameFiles []string, gifOutRoo
 	}
 	inputGifBoss.Config = image.Config{ColorModel: inputGifBoss.Config.ColorModel, Width: size.X, Height: size.Y}
 	inputGifBoss.LoopCount = 0
-	finalGif, _ := os.OpenFile(path.Join(gifOutRoot, common.UuidGenerator()+"out.gif"), os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.ModePerm)
+	finalName := path.Join(gifOutRoot, common.UuidGenerator()+"out.gif")
+	finalGif, _ := os.OpenFile(finalName, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.ModePerm)
 
 	err := gif.EncodeAll(finalGif, inputGifBoss)
 	if err != nil {
@@ -56,4 +57,5 @@ func OpGifFileToGifDone(imagesInputRoot string, imgNameFiles []string, gifOutRoo
 		debug.PrintStack()
 		os.Exit(1)
 	}
+	return finalName
 }
